@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const productsSchema = new mongoose.Schema({
   id: {
     type: Number,
-    required: true,
+    required: true, //필수값
     unique: true,
   },
   password: {
@@ -26,7 +26,7 @@ const productsSchema = new mongoose.Schema({
     type: String,
   },
   createdAt: {
-    type: String,
+    type: Date,
   },
 });
 module.exports = mongoose.model("Products", productsSchema);
