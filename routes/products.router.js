@@ -43,20 +43,24 @@ router.get("/products", async (req, res) => {
 router.get("/products/:productId", async (req, res) => {
   const { productId } = req.params;
   const products = await Products.find({ id: Number(productId) });
-  try {
-    const result = products.map((data) => {
-      return {
-        id: data.id,
-        title: data.title,
-        content: data.content,
-        author: data.author,
-        status: data.status,
-        createdAt: data.createdAt,
-      };
-    });
-    res.json({ date: result });
-  } catch (err) {
-    res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
+  if (products.length == 0) {
+    res.status(404).json({ message: "상품조회에 실패하였습니다." });
+  } else {
+    try {
+      const result = products.map((data) => {
+        return {
+          id: data.id,
+          title: data.title,
+          content: data.content,
+          author: data.author,
+          status: data.status,
+          createdAt: data.createdAt,
+        };
+      });
+      res.json({ date: result });
+    } catch (err) {
+      res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
+    }
   }
 });
 
@@ -68,9 +72,9 @@ router.put("/products/:productId", async (req, res) => {
   console.log(req.body);
   console.log(products);
   if (!products.length) {
-    res.status(404).json({ message: "게시글 조회에 실패하였습니다." });
+    res.status(404).json({ message: "상품 조회에 실패하였습니다." });
   } else if (password !== products[0].password) {
-    res.status(400).json({ message: "비밀번호가 맞지 않습니다." });
+    res.status(401).json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
   } else {
     try {
       await Products.findByIdAndUpdate(productId._id, {
@@ -78,7 +82,7 @@ router.put("/products/:productId", async (req, res) => {
         content,
         status,
       });
-      res.send({ message: "게시글을 수정하였습니다." });
+      res.send({ message: "상품 정보를 수정하였습니다." });
     } catch (err) {
       console.log(err);
       res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
@@ -92,13 +96,13 @@ router.delete("/products/:productId", async (req, res) => {
   const { password } = req.body;
   const products = await Products.find({ id: Number(productId) });
   if (!products.length) {
-    res.status(404).json({ message: "게시글 조회에 실패하였습니다." });
+    res.status(404).json({ message: "상품 조회에 실패하였습니다." });
   } else if (password !== products[0].password) {
-    res.status(400).json({ message: "비밀번호가 맞지 않습니다." });
+    res.status(401).json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
   } else {
     try {
       await Products.deleteOne({ id: Number(productId) });
-      res.json({ message: "게시글을 삭제하였습니다." });
+      res.json({ message: "상품을 삭제하였습니다." });
     } catch (err) {
       res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
     }
