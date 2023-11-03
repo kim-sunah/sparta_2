@@ -1,0 +1,31 @@
+{
+  "name": "sparta_2",
+  "version": "1.0.0",
+  "description": "스파르타 개인과제 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettify": "prettier --write *.js **/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kim-sunah/sparta_2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kim-sunah/sparta_2/issues"
+  },
+  "homepage": "https://github.com/kim-sunah/sparta_2#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "prettierrc": "^0.0.0-5"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}
