@@ -83,11 +83,11 @@ router.put(api_detail, async (req, res) => {
       .json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
   } else {
     try {
-      await Products.findByIdAndUpdate(productId._id, {
+      await Products.updateOne({id : productId,$set: {
         title,
         content,
         status,
-      });
+      }});
       res.send({ message: "상품 정보를 수정하였습니다." });
     } catch (err) {
       console.log(err);

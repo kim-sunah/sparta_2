@@ -6,7 +6,7 @@ const connect = () => {
   mongoose
     .connect(
       // 빨간색으로 표시된 부분은 대여한 ID, Password, 주소에 맞게끔 수정해주세요!
-      process.env.CONNECT_DATABASE,
+      process.env.CONNECT_ATLAS,
       {
         dbName: process.env.CONNECT_DATABASE_NAME, // node_lv1 데이터베이스명을 사용합니다.
       },
