@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const Products = require("../schemas/products.schema.js");
+require("dotenv").config();
+const api_basic = process.env.API_BASIC;
+const api_detail = process.env.API_DETAIL;
 
 //상품등록
-router.post("/products", async (req, res) => {
+router.post(api_basic, async (req, res) => {
   const { title, content, author, password } = req.body;
   const products = await Products.find({}).sort({ id: -1 });
   const id = products.length === 0 ? 1 : Number(products[0].id) + 1;
+  console.log(req.body)
   try {
     await Products.create({
       id: id,
@@ -25,7 +29,7 @@ router.post("/products", async (req, res) => {
 });
 
 //상품목록조회
-router.get("/products", async (req, res) => {
+router.get(api_basic, async (req, res) => {
   const products = await Products.find({}).sort({ id: -1 });
   const result = products.map((data) => {
     return {
@@ -40,7 +44,7 @@ router.get("/products", async (req, res) => {
 });
 
 //상품 상세조회
-router.get("/products/:productId", async (req, res) => {
+router.get(api_detail, async (req, res) => {
   const { productId } = req.params;
   const products = await Products.find({ id: Number(productId) });
   if (products.length == 0) {
@@ -65,7 +69,7 @@ router.get("/products/:productId", async (req, res) => {
 });
 
 //상품 정보 수정
-router.put("/products/:productId", async (req, res) => {
+router.put(api_detail, async (req, res) => {
   const { productId } = req.params;
   const { title, content, password, status } = req.body;
   const products = await Products.find({ id: Number(productId) });
@@ -74,7 +78,9 @@ router.put("/products/:productId", async (req, res) => {
   if (!products.length) {
     res.status(404).json({ message: "상품 조회에 실패하였습니다." });
   } else if (password !== products[0].password) {
-    res.status(401).json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
+    res
+      .status(401)
+      .json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
   } else {
     try {
       await Products.findByIdAndUpdate(productId._id, {
@@ -91,14 +97,16 @@ router.put("/products/:productId", async (req, res) => {
 });
 
 //상품 삭제
-router.delete("/products/:productId", async (req, res) => {
+router.delete(api_detail, async (req, res) => {
   const { productId } = req.params;
   const { password } = req.body;
   const products = await Products.find({ id: Number(productId) });
   if (!products.length) {
     res.status(404).json({ message: "상품 조회에 실패하였습니다." });
   } else if (password !== products[0].password) {
-    res.status(401).json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
+    res
+      .status(401)
+      .json({ message: "상품을 수정할 권한이 존재하지 않습니다." });
   } else {
     try {
       await Products.deleteOne({ id: Number(productId) });
