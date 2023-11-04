@@ -10,9 +10,12 @@ router.post(api_basic, async (req, res) => {
   const { title, content, author, password } = req.body;
   const products = await Products.find({}).sort({ id: -1 });
   const id = products.length === 0 ? 1 : Number(products[0].id) + 1;
-  const seoulTime = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-  const utcDateString = `${seoulTime.getFullYear()}-${(seoulTime.getMonth() + 1).toString().padStart(2, "0")}-${seoulTime.getDate().toString().padStart(2, "0")}T${seoulTime.getHours().toString().padStart(2, "0")}:${seoulTime.getMinutes().toString().padStart(2, "0")}:${seoulTime.getSeconds().toString().padStart(2, "0")}.${seoulTime.getMilliseconds()}Z`;
+  const seoulTimeOffset = 9 * 60; // 한국 시간대 (UTC+9)의 분 단위 오프셋
+  const currentDate = new Date();
+  const seoulTime = new Date(currentDate.getTime() + seoulTimeOffset * 60000); // 시간 오프셋 적용
   
+  // UTC 형식으로 저장
+  const utcDateString = seoulTime.toISOString();
   console.log(utcDateString);
   try {
     await Products.create({
