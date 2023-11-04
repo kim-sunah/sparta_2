@@ -10,7 +10,10 @@ router.post(api_basic, async (req, res) => {
   const { title, content, author, password } = req.body;
   const products = await Products.find({}).sort({ id: -1 });
   const id = products.length === 0 ? 1 : Number(products[0].id) + 1;
-  console.log(req.body)
+  const seoulTime = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+  const utcDateString = `${seoulTime.getFullYear()}-${(seoulTime.getMonth() + 1).toString().padStart(2, "0")}-${seoulTime.getDate().toString().padStart(2, "0")}T${seoulTime.getHours().toString().padStart(2, "0")}:${seoulTime.getMinutes().toString().padStart(2, "0")}:${seoulTime.getSeconds().toString().padStart(2, "0")}.${seoulTime.getMilliseconds()}Z`;
+  
+  console.log(utcDateString);
   try {
     await Products.create({
       id: id,
@@ -19,7 +22,7 @@ router.post(api_basic, async (req, res) => {
       content,
       author,
       status: "FOR_SALE",
-      createdAt: new Date(),
+      createdAt:utcDateString,
     });
     res.json({ message: "판매 상품을 등록하였습니다." });
   } catch (err) {
