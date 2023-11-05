@@ -41,7 +41,7 @@ router.get(api_basic, async (req, res) => {
   const products = await Products.find({}).sort({ id: -1 });
   const result = products.map((data) => {
     return {
-      id: data.id,
+      id: data._id,
       title: data.title,
       author: data.author,
       status: data.status,
@@ -61,7 +61,7 @@ router.get(api_detail, async (req, res) => {
   } else {
     try {
       const result ={
-          id: products.id,
+          id: products._id,
           title: products.title,
           content: products.content,
           author: products.author,
