@@ -4,6 +4,8 @@ const Products = require("../schemas/products.schema.js");
 require("dotenv").config();
 const api_basic = process.env.API_BASIC;
 const api_detail = process.env.API_DETAIL;
+console.log(api_basic)
+console.log(api_detail)
 
 //상품등록
 router.post(api_basic, async (req, res) => {
@@ -52,23 +54,23 @@ router.get(api_basic, async (req, res) => {
 //상품 상세조회
 router.get(api_detail, async (req, res) => {
   const { productId } = req.params;
-  const products = await Products.find({ id: Number(productId) });
-  if (products.length == 0) {
+  const products = await Products.findOne({ id: Number(productId) });
+
+  if (products == null) {
     res.status(404).json({ message: "상품조회에 실패하였습니다." });
   } else {
     try {
-      const result = products.map((data) => {
-        return {
-          id: data.id,
-          title: data.title,
-          content: data.content,
-          author: data.author,
-          status: data.status,
-          createdAt: data.createdAt,
+      const result ={
+          id: products.id,
+          title: products.title,
+          content: products.content,
+          author: products.author,
+          status: products.status,
+          createdAt: products.createdAt,
         };
-      });
       res.json({ date: result });
     } catch (err) {
+      console.error(err);
       res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
     }
   }
