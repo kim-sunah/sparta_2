@@ -54,24 +54,27 @@ router.get(api_basic, async (req, res) => {
 //상품 상세조회
 router.get(api_detail, async (req, res) => {
   const { productId } = req.params;
-  const products = await Products.findOne({ id: Number(productId) });
-
-  if (products == null) {
-    res.status(404).json({ message: "상품조회에 실패하였습니다." });
-  } else {
-    try {
-      const result ={
-          id: products._id,
-          title: products.title,
-          content: products.content,
-          author: products.author,
-          status: products.status,
-          createdAt: products.createdAt,
-        };
-      res.json({ date: result });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
+  if(typeof productId !== Number){
+    res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
+  }else{
+    const products = await Products.findOne({ id: productId });
+    if (products == null) {
+      res.status(404).json({ message: "상품조회에 실패하였습니다." });
+    } else {
+      try {
+        const result ={
+            id: products._id,
+            title: products.title,
+            content: products.content,
+            author: products.author,
+            status: products.status,
+            createdAt: products.createdAt,
+          };
+        res.json({ date: result });
+      } catch (err) {
+        console.error(err);
+        res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." });
+      }
     }
   }
 });
@@ -108,7 +111,9 @@ router.put(api_detail, async (req, res) => {
 router.delete(api_detail, async (req, res) => {
   const { productId } = req.params;
   const { password } = req.body;
+  
   const products = await Products.find({ id: Number(productId) });
+  
   if (!products.length) {
     res.status(404).json({ message: "상품 조회에 실패하였습니다." });
   } else if (password !== products[0].password) {
