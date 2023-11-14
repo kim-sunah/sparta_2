@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const productsSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true, //필수값
-    unique: true,
-  },
   password: {
     type: String,
     required: true,
@@ -24,9 +19,10 @@ const productsSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    default: "FOR_SALE",
   },
-  createdAt: {
-    type: Date,
-  },
-});
+},
+  {
+    timestamps: true,
+  });
 module.exports = mongoose.model("Products", productsSchema);
